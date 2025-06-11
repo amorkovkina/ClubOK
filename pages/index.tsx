@@ -543,7 +543,7 @@ const CyberShieldPage: React.FC = () => {
                   </div>
                 ))}
               </div>
-              <div className="text-center mt-24 space-x-4">
+              <div className="text-center mt-24 flex flex-col md:flex-row space-y-4 md:space-y-0 space-x-0 md:space-x-4">
                 <button
                   onClick={() => router.push('/news')}
                   className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full text-xl transition-colors duration-300"
