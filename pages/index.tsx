@@ -53,6 +53,7 @@ interface FormData {
   name: string;
   email: string;
   question: string;
+  consent: boolean;
 }
 
 const newsData: NewsItem[] = [
@@ -179,7 +180,8 @@ const CyberShieldPage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
-    question: ''
+    question: '',
+    consent: false
   });
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -291,8 +293,13 @@ const CyberShieldPage: React.FC = () => {
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const target = e.target as HTMLInputElement;
+    const { name, value, type } = target;
+    
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === 'checkbox' ? target.checked : value
+    }));
   };
 
   const handleFormSubmit = (e: React.FormEvent) => {
@@ -301,12 +308,16 @@ const CyberShieldPage: React.FC = () => {
       alert('Пожалуйста, заполните все поля.');
       return;
     }
+    if (!formData.consent) {
+      alert("Пожалуйста, дайте согласие на обработку персональных данных");
+      return;
+    }
     setIsFormSubmitting(true);
     // Здесь можно добавить логику отправки данных на сервер или API
     setTimeout(() => {
       setIsFormSubmitting(false);
       setFormSubmitted(true);
-      setFormData({ name: '', email: '', question: '' });
+      setFormData({ name: '', email: '', question: '',  consent:true});
       setTimeout(() => setFormSubmitted(false), 4000);
     }, 1000);
   };
@@ -798,6 +809,24 @@ const CyberShieldPage: React.FC = () => {
                     className="w-full rounded-md border-2 border-gray-300 px-4 py-3 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500 resize-none"
                     required
                   />
+                </div>
+                <div className="flex items-start">
+                  <div className="flex items-center h-5">
+                    <input
+                      id="consent"
+                      name="consent"
+                      type="checkbox"
+                      checked={formData.consent}
+                      onChange={handleFormChange}
+                      className="focus:ring-blue-500 h-6 w-6 text-blue-600 border-2 border-gray-300 rounded"
+                      required
+                    />
+                  </div>
+                  <div className="ml-3">
+                    <label htmlFor="consent" className="text-lg text-slate-700">
+                      Я согласен на обработку персональных данных в соответствии с ФЗ «О персональных данных» №152-ФЗ
+                    </label>
+                  </div>
                 </div>
                 <div className="text-center">
                   <button
