@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import {Menu, X, Newspaper, BookOpen, FileText, Lightbulb, Send, ExternalLink, ChevronRight, Volleyball, ShieldAlert, Mail, Instagram } from 'lucide-react';
 import Image from 'next/image';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
