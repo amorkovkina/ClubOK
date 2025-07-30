@@ -1,6 +1,6 @@
 import Head from 'next/head';
 import React, { useState, useEffect, useRef } from 'react';
-import {Menu, X, Newspaper, BookOpen, FileText, Lightbulb, ExternalLink, ChevronRight, Volleyball, ShieldAlert, Mail, Instagram, Send } from 'lucide-react';
+import {Menu, X, Newspaper, BookOpen, FileText, Lightbulb, Send, ExternalLink, ChevronRight, Volleyball, ShieldAlert, Mail, Instagram } from 'lucide-react';
 import Image from 'next/image';
 import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from 'recharts';
 import { useRouter } from 'next/router';
@@ -40,13 +40,6 @@ interface TeamMember {
   email?: string;
   telegram?: string;
   instagram?: string;
-}
-
-interface Message {
-  id: string;
-  text: string;
-  sender: 'user' | 'assistant';
-  timestamp: Date;
 }
 
 interface FormData {
@@ -112,7 +105,7 @@ const knowledgeBaseData: KnowledgeBaseItem[] = [
 ];
 
 const teamData: TeamMember[] = [
-  {
+  /*{
     id: 'tm1',
     name: 'Алина Козловских',
     role: 'Дизайнер/разработчик',
@@ -147,18 +140,79 @@ const teamData: TeamMember[] = [
     email: 'aogolubeva@edu.hse.ru',
     telegram: '',
     instagram: '',
+  },*/
+
+    {
+    id: 'tm1',
+    name: 'Иван Петров',
+    role: 'CEO',
+    bio: 'Основатель и руководитель проекта',
+    imageUrl: '/team/tm4.jpg',
+    details: 'Иван имеет более 15 лет опыта в IT и управлении проектами. Основал КлубОК в 2020 году с целью сделать цифровой мир безопаснее для всех поколений.',
+    university: 'МГУ',
+    email: 'ceo@clubok.ru',
+    telegram: 'https://t.me/ivan_petrov',
+  },
+  {
+    id: 'tm2',
+    name: 'Александра Смирнова',
+    role: 'Эксперт по безопасности',
+    bio: 'Специалист по кибербезопасности',
+    imageUrl: '/team/tm22.jpg',
+    details: 'Александра - сертифицированный специалист по информационной безопасности с 10-летним опытом работы в крупных IT-компаниях.',
+    university: 'МИФИ',
+    email: 'security@clubok.ru',
+  },
+  {
+    id: 'tm3',
+    name: 'Дмитрий Иванов',
+    role: 'Эксперт по праву',
+    bio: 'Юрист в области цифрового права',
+    imageUrl: '/team/expert2.jpg',
+    details: 'Дмитрий специализируется на правовых аспектах цифровой безопасности и защите персональных данных.',
+    university: 'МГЮА',
+    email: 'law@clubok.ru',
   },
   {
     id: 'tm4',
-    name: 'Софья Майкова',
-    role: 'Системный аналитик',
-    bio: 'Отвечает за выявление и минимизацию рисков информационной безопасности.',
-    imageUrl: '/team/tm44.jpg',
-    details: 'Софья — системный аналитик с фокусом на создание безопасных и удобных IT-решений. Специализируется на трансформации бизнес-требований в технические спецификации с учетом всех аспектов информационной безопасности.',
-    university: 'НИУ ВШЭ',
-    email: 'smmaykova@edu.hse.ru',
-    telegram: '',
-    instagram: '',
+    name: 'Елена Кузнецова',
+    role: 'Эксперт по обучению',
+    bio: 'Методист образовательных программ',
+    imageUrl: '/team/expert3.jpg',
+    details: 'Елена разрабатывает обучающие программы и методики для разных возрастных групп.',
+    university: 'ВШЭ',
+    email: 'education@clubok.ru',
+  },
+  {
+    id: 'tm5',
+    name: 'Ольга Васильева',
+    role: 'Маркетолог',
+    bio: 'Специалист по продвижению и PR',
+    imageUrl: '/team/marketer.jpg',
+    details: 'Ольга отвечает за коммуникацию с аудиторией и продвижение проекта.',
+    university: 'РГГУ',
+    email: 'marketing@clubok.ru',
+    instagram: 'https://instagram.com/olga_marketer',
+  },
+  {
+    id: 'tm6',
+    name: 'Сергей Лебедев',
+    role: 'IT-специалист',
+    bio: 'Full-stack разработчик',
+    imageUrl: '/team/it1.jpg',
+    details: 'Сергей разрабатывает и поддерживает техническую инфраструктуру проекта.',
+    university: 'МФТИ',
+    email: 'dev1@clubok.ru',
+  },
+  {
+    id: 'tm7',
+    name: 'Анна Морозова',
+    role: 'IT-специалист',
+    bio: 'UX/UI дизайнер',
+    imageUrl: '/team/it2.jpg',
+    details: 'Анна создает удобные и доступные интерфейсы для нашей платформы.',
+    university: 'Строгановка',
+    email: 'design@clubok.ru',
   },
 ];
 
@@ -173,10 +227,6 @@ const CyberShieldPage: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [selectedMember, setSelectedMember] = useState<TeamMember | null>(null);
   const [showModal, setShowModal] = useState(false);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [inputMessage, setInputMessage] = useState('');
-  const [hasInteracted, setHasInteracted] = useState(false);
   const [formData, setFormData] = useState<FormData>({
     name: '',
     email: '',
@@ -185,7 +235,6 @@ const CyberShieldPage: React.FC = () => {
   });
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  const chatEndRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -219,27 +268,6 @@ const CyberShieldPage: React.FC = () => {
     };
   }, [showModal]);
 
-  // Auto-prompt after 10 seconds
-  useEffect(() => {
-    if (!hasInteracted && messages.length === 0) {
-      const timer = setTimeout(() => {
-        setMessages([{
-          id: '1',
-          text: 'Нужна помощь?',
-          sender: 'assistant',
-          timestamp: new Date()
-        }]);
-      }, 10000);
-
-      return () => clearTimeout(timer);
-    }
-  }, [hasInteracted, messages.length]);
-
-  // Scroll to bottom when new messages arrive
-  useEffect(() => {
-    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
-
   const openModal = (member: TeamMember) => {
     setSelectedMember(member);
     setShowModal(true);
@@ -248,48 +276,6 @@ const CyberShieldPage: React.FC = () => {
   const closeModal = () => {
     setShowModal(false);
     setTimeout(() => setSelectedMember(null), 200);
-  };
-
-  const handleSendMessage = () => {
-    if (inputMessage.trim()) {
-      const newMessage: Message = {
-        id: Date.now().toString(),
-        text: inputMessage,
-        sender: 'user',
-        timestamp: new Date()
-      };
-      
-      setMessages(prev => [...prev, newMessage]);
-      setInputMessage('');
-      setHasInteracted(true);
-
-      // Simulate assistant response
-      setTimeout(() => {
-        const assistantResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          text: getAssistantResponse(inputMessage),
-          sender: 'assistant',
-          timestamp: new Date()
-        };
-        setMessages(prev => [...prev, assistantResponse]);
-      }, 1000);
-    }
-  };
-
-  const getAssistantResponse = (userMessage: string): string => {
-    const lowerMessage = userMessage.toLowerCase();
-    
-    if (lowerMessage.includes('пароль') || lowerMessage.includes('password')) {
-      return 'Для создания надежного пароля используйте комбинацию букв, цифр и специальных символов. Рекомендую ознакомиться с нашей инструкцией в базе знаний.';
-    } else if (lowerMessage.includes('безопасность') || lowerMessage.includes('защита')) {
-      return 'Цифровая безопасность очень важна! Рекомендую начать с настройки двухфакторной аутентификации и использования надежных паролей. Могу рассказать подробнее о конкретных мерах защиты.';
-    } else if (lowerMessage.includes('помощь') || lowerMessage.includes('help')) {
-      return 'Я здесь, чтобы помочь вам с вопросами цифровой безопасности! Вы можете спросить меня о паролях, защите данных, безопасности в интернете или юридических вопросах.';
-    } else if (lowerMessage.includes('команда') || lowerMessage.includes('контакт')) {
-      return 'Наша команда состоит из экспертов в области IT-безопасности и права. Вы можете познакомиться с ними в разделе "Команда" на сайте.';
-    } else {
-      return 'Спасибо за ваш вопрос! Я постараюсь помочь, но если нужна более подробная консультация, обратитесь к специалисту.';
-    }
   };
 
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -619,34 +605,125 @@ const CyberShieldPage: React.FC = () => {
           <section id="team" className="py-20 md:py-24 bg-slate-50">
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <h2 className="text-4xl sm:text-5xl font-bold text-center mb-6 text-slate-800">Наша Команда</h2>
-              <p className="text-xl text-center text-slate-600 mb-16 max-w-3xl mx-auto">Познакомьтесь с организаторами проекта КлубОК, работающими над вашей безопасностью.</p>
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
-                {teamData.map((member) => (
+              <p className="text-xl text-center text-slate-600 mb-16 max-w-3xl mx-auto">
+                Познакомьтесь с нашей профессиональной командой, работающей над вашей безопасностью.
+              </p>
+              
+              {/* Первый ряд */}
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                {/* Блок CEO (занимает 2 строки) */}
+                <div className="md:row-span-2 bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center">
+                  {teamData[0].imageUrl ? (
+                    <div className="w-40 h-40 rounded-full mb-6 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
+                      <Image
+                        src={teamData[0].imageUrl}
+                        alt={teamData[0].name}
+                        className="w-full h-full object-cover"
+                        width={160}
+                        height={160}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-40 h-40 rounded-full mb-6 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
+                  )}
+                  <h3 className="text-2xl font-semibold mb-2 text-slate-800">{teamData[0].name}</h3>
+                  <p className="text-blue-600 font-medium mb-3 text-lg">{teamData[0].role}</p>
+                  <p className="text-lg text-slate-600 flex-grow mb-6">{teamData[0].bio}</p>
+                  <button
+                    className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full text-xl transition-colors duration-300"
+                    onClick={() => openModal(teamData[0])}
+                    type="button"
+                  >
+                    Подробнее
+                  </button>
+                </div>
+                
+                {/* Три эксперта справа */}
+                {teamData.slice(1, 4).map((member) => (
                   <div
                     key={member.id}
-                    className="bg-white p-8 rounded-xl shadow-lg text-center hover:shadow-xl transition-shadow duration-300 flex flex-col items-center"
+                    className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center"
                   >
-                    <div className="w-40 h-40 rounded-full mb-6 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
-                      {member.imageUrl ? (
+                    {member.imageUrl ? (
+                      <div className="w-32 h-32 rounded-full mb-4 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
                         <Image
                           src={member.imageUrl}
                           alt={member.name}
                           className="w-full h-full object-cover"
-                          width={160}
-                          height={160}
-                          onError={e => {
-                            (e.target as HTMLImageElement).style.display = 'none';
-                          }}
+                          width={128}
+                          height={128}
                         />
-                      ) : (
-                        <div className="bg-gray-200 border-2 border-dashed rounded-full w-36 h-36" />
-                      )}
-                    </div>
-                    <h3 className="text-2xl font-semibold mb-2 text-slate-800">{member.name}</h3>
-                    <p className="text-blue-600 font-medium mb-3 text-lg">{member.role}</p>
-                    <p className="text-lg text-slate-600 flex-grow mb-6">{member.bio}</p>
+                      </div>
+                    ) : (
+                      <div className="w-32 h-32 rounded-full mb-4 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
+                    )}
+                    <h3 className="text-xl font-semibold mb-2 text-slate-800">{member.name}</h3>
+                    <p className="text-blue-600 font-medium mb-2 text-lg">{member.role}</p>
+                    <p className="text-md text-slate-600 flex-grow mb-4">{member.bio}</p>
                     <button
-                      className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full text-xl transition-colors duration-300"
+                      className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
+                      onClick={() => openModal(member)}
+                      type="button"
+                    >
+                      Подробнее
+                    </button>
+                  </div>
+                ))}
+              </div>
+              
+              {/* Второй ряд */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:ml-[25%]">
+                {/* Маркетолог (занимает 1 колонку) */}
+                <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center">
+                  {teamData[4].imageUrl ? (
+                    <div className="w-32 h-32 rounded-full mb-4 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
+                      <Image
+                        src={teamData[4].imageUrl}
+                        alt={teamData[4].name}
+                        className="w-full h-full object-cover"
+                        width={128}
+                        height={128}
+                      />
+                    </div>
+                  ) : (
+                    <div className="w-32 h-32 rounded-full mb-4 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
+                  )}
+                  <h3 className="text-xl font-semibold mb-2 text-slate-800">{teamData[4].name}</h3>
+                  <p className="text-blue-600 font-medium mb-2 text-lg">{teamData[4].role}</p>
+                  <p className="text-md text-slate-600 flex-grow mb-4">{teamData[4].bio}</p>
+                  <button
+                    className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
+                    onClick={() => openModal(teamData[4])}
+                    type="button"
+                  >
+                    Подробнее
+                  </button>
+                </div>
+                
+                {/* Два IT-специалиста */}
+                {teamData.slice(5, 7).map((member) => (
+                  <div
+                    key={member.id}
+                    className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center"
+                  >
+                    {member.imageUrl ? (
+                      <div className="w-32 h-32 rounded-full mb-4 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
+                        <Image
+                          src={member.imageUrl}
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                          width={128}
+                          height={128}
+                        />
+                      </div>
+                    ) : (
+                      <div className="w-32 h-32 rounded-full mb-4 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
+                    )}
+                    <h3 className="text-xl font-semibold mb-2 text-slate-800">{member.name}</h3>
+                    <p className="text-blue-600 font-medium mb-2 text-lg">{member.role}</p>
+                    <p className="text-md text-slate-600 flex-grow mb-4">{member.bio}</p>
+                    <button
+                      className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
                       onClick={() => openModal(member)}
                       type="button"
                     >
@@ -846,79 +923,6 @@ const CyberShieldPage: React.FC = () => {
             </div>
           </section>
         </main>
-
-        {/* Digital Assistant Chat Widget */}
-        <div className="fixed bottom-8 right-8 z-50 flex flex-col items-end">
-          {/* Chat Window */}
-          {isChatOpen && (
-            <div className="w-full max-w-xs sm:max-w-sm md:w-80 lg:w-96 bg-white rounded-xl shadow-lg border border-gray-300 flex flex-col">
-              <div className="flex items-center justify-between bg-blue-600 text-white rounded-t-xl px-6 py-4">
-                <div className="flex items-center space-x-3">
-                  <Volleyball size={32} />
-                  <span className="font-semibold text-xl">Помощник</span>
-                </div>
-                <button
-                  onClick={() => setIsChatOpen(false)}
-                  aria-label="Закрыть чат"
-                  className="focus:outline-none"
-                >
-                  <X size={32} />
-                </button>
-              </div>
-              <div className="p-6 flex-grow overflow-y-auto max-h-96 scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-gray-100">
-                {messages.length === 0 && (
-                  <p className="text-gray-500 text-center text-xl">Напишите что-нибудь, чтобы начать чат.</p>
-                )}
-                {messages.map((msg) => (
-                  <div
-                    key={msg.id}
-                    className={`mb-4 flex ${msg.sender === 'user' ? 'justify-end' : 'justify-start'}`}
-                  >
-                    <div
-                      className={`max-w-[80%] px-6 py-3 rounded-lg whitespace-pre-wrap text-lg ${
-                        msg.sender === 'user' ? 'bg-blue-600 text-white' : 'bg-gray-200 text-gray-900'
-                      }`}
-                    >
-                      {msg.text}
-                    </div>
-                  </div>
-                ))}
-                <div ref={chatEndRef} />
-              </div>
-              <div className="flex border-t border-gray-300 rounded-b-xl">
-                <input
-                  type="text"
-                  value={inputMessage}
-                  onChange={(e) => setInputMessage(e.target.value)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      e.preventDefault();
-                      handleSendMessage();
-                    }
-                  }}
-                  placeholder="Введите сообщение..."
-                  className="flex-grow px-6 py-4 rounded-bl-xl focus:outline-none text-xl"
-                />
-                <button
-                  onClick={handleSendMessage}
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-6 rounded-br-xl"
-                  aria-label="Отправить сообщение"
-                >
-                  <Send size={28} />
-                </button>
-              </div>
-            </div>
-          )}
-
-          {/* Floating Action Button */}
-          <button
-            onClick={() => setIsChatOpen(!isChatOpen)}
-            aria-label="Открыть чат ассистента"
-            className="bg-blue-600 hover:bg-blue-700 text-white rounded-full p-4 shadow-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            <Volleyball size={42} />
-          </button>
-        </div>
 
         {/* Footer */}
         <footer className="bg-slate-800 text-slate-300 py-12">
