@@ -547,12 +547,6 @@ const CyberShieldPage: React.FC = () => {
                 >
                   Все новости
                 </button>
-                <button
-                  className="inline-flex items-center justify-center bg-blue-600 text-white font-semibold py-3 px-6 rounded-full text-xl shadow-md hover:bg-blue-700 transition-colors duration-300 disabled:opacity-50 min-w-[240px]"
-                >
-                  <Mail size={18} className="mr-2 group-hover:translate-x-1 transition-transform" />
-                  Подписаться на рассылку
-                </button>
               </div>
             </div>
           </section>
@@ -602,15 +596,35 @@ const CyberShieldPage: React.FC = () => {
           </section>
 
           {/* Team Section */}
-          <section id="team" className="py-20 md:py-24 bg-slate-50">
+          <section id="team" className="py-20 md:py-24 relative">
+            {/* Фоновые подложки для групп */}
+            <div className="absolute inset-0 -z-10">
+              {/* Фон для CEO (левый 25%) */}
+              <div 
+                className="absolute left-0 top-0 h-full w-1/4 bg-blue-50"
+                style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
+              ></div>
+              
+              {/* Фон для экспертов (правый верхний квадрант) */}
+              <div 
+                className="absolute left-1/4 top-0 h-1/2 w-3/4 bg-green-50"
+                style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
+              ></div>
+              
+              {/* Фон для маркетолога и IT (правый нижний квадрант) */}
+              <div 
+                className="absolute left-1/4 top-1/2 h-1/2 w-3/4 bg-purple-50"
+                style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0 100%)' }}
+              ></div>
+            </div>
+
             <div className="container mx-auto px-4 sm:px-6 lg:px-8">
               <h2 className="text-4xl sm:text-5xl font-bold text-center mb-6 text-slate-800">Наша Команда</h2>
               <p className="text-xl text-center text-slate-600 mb-16 max-w-3xl mx-auto">
                 Познакомьтесь с нашей профессиональной командой, работающей над вашей безопасностью.
               </p>
               
-              {/* Первый ряд */}
-              <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                 {/* Блок CEO (занимает 2 строки) */}
                 <div className="md:row-span-2 bg-white p-8 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center">
                   {teamData[0].imageUrl ? (
@@ -626,11 +640,11 @@ const CyberShieldPage: React.FC = () => {
                   ) : (
                     <div className="w-40 h-40 rounded-full mb-6 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
                   )}
-                  <h3 className="text-2xl font-semibold mb-2 text-slate-800">{teamData[0].name}</h3>
+                  <h3 className="text-xl font-semibold mb-2 text-slate-800">{teamData[0].name}</h3>
                   <p className="text-blue-600 font-medium mb-3 text-lg">{teamData[0].role}</p>
                   <p className="text-lg text-slate-600 flex-grow mb-6">{teamData[0].bio}</p>
                   <button
-                    className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-3 px-8 rounded-full text-xl transition-colors duration-300"
+                    className="inline-block bg-blue-600 text-white hover:bg-blue-700 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
                     onClick={() => openModal(teamData[0])}
                     type="button"
                   >
@@ -639,78 +653,48 @@ const CyberShieldPage: React.FC = () => {
                 </div>
                 
                 {/* Три эксперта справа */}
-                {teamData.slice(1, 4).map((member) => (
-                  <div
-                    key={member.id}
-                    className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center"
-                  >
-                    {member.imageUrl ? (
-                      <div className="w-32 h-32 rounded-full mb-4 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
-                        <Image
-                          src={member.imageUrl}
-                          alt={member.name}
-                          className="w-full h-full object-cover"
-                          width={128}
-                          height={128}
-                        />
-                      </div>
-                    ) : (
-                      <div className="w-32 h-32 rounded-full mb-4 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
-                    )}
-                    <h3 className="text-xl font-semibold mb-2 text-slate-800">{member.name}</h3>
-                    <p className="text-blue-600 font-medium mb-2 text-lg">{member.role}</p>
-                    <p className="text-md text-slate-600 flex-grow mb-4">{member.bio}</p>
-                    <button
-                      className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
-                      onClick={() => openModal(member)}
-                      type="button"
+                <div className="md:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-8">
+                  {teamData.slice(1, 4).map((member) => (
+                    <div
+                      key={member.id}
+                      className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center"
                     >
-                      Подробнее
-                    </button>
-                  </div>
-                ))}
-              </div>
-              
-              {/* Второй ряд */}
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:ml-[25%]">
-                {/* Маркетолог (занимает 1 колонку) */}
-                <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center">
-                  {teamData[4].imageUrl ? (
-                    <div className="w-32 h-32 rounded-full mb-4 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
-                      <Image
-                        src={teamData[4].imageUrl}
-                        alt={teamData[4].name}
-                        className="w-full h-full object-cover"
-                        width={128}
-                        height={128}
-                      />
+                      {member.imageUrl ? (
+                        <div className="w-32 h-32 rounded-full mb-4 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
+                          <Image
+                            src={member.imageUrl}
+                            alt={member.name}
+                            className="w-full h-full object-cover"
+                            width={128}
+                            height={128}
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-32 h-32 rounded-full mb-4 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
+                      )}
+                      <h3 className="text-xl font-semibold mb-2 text-slate-800">{member.name}</h3>
+                      <p className="text-blue-600 font-medium mb-2 text-lg">{member.role}</p>
+                      <p className="text-md text-slate-600 flex-grow mb-4">{member.bio}</p>
+                      <button
+                        className="inline-block bg-blue-600 text-white hover:bg-blue-700 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
+                        onClick={() => openModal(member)}
+                        type="button"
+                      >
+                        Подробнее
+                      </button>
                     </div>
-                  ) : (
-                    <div className="w-32 h-32 rounded-full mb-4 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
-                  )}
-                  <h3 className="text-xl font-semibold mb-2 text-slate-800">{teamData[4].name}</h3>
-                  <p className="text-blue-600 font-medium mb-2 text-lg">{teamData[4].role}</p>
-                  <p className="text-md text-slate-600 flex-grow mb-4">{teamData[4].bio}</p>
-                  <button
-                    className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
-                    onClick={() => openModal(teamData[4])}
-                    type="button"
-                  >
-                    Подробнее
-                  </button>
+                  ))}
                 </div>
                 
-                {/* Два IT-специалиста */}
-                {teamData.slice(5, 7).map((member) => (
-                  <div
-                    key={member.id}
-                    className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center"
-                  >
-                    {member.imageUrl ? (
+                {/* Второй ряд (маркетолог и IT) */}
+                <div className="md:col-span-3 md:col-start-2 grid grid-cols-1 md:grid-cols-3 gap-8 mt-8">
+                  {/* Маркетолог */}
+                  <div className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center">
+                    {teamData[4].imageUrl ? (
                       <div className="w-32 h-32 rounded-full mb-4 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
                         <Image
-                          src={member.imageUrl}
-                          alt={member.name}
+                          src={teamData[4].imageUrl}
+                          alt={teamData[4].name}
                           className="w-full h-full object-cover"
                           width={128}
                           height={128}
@@ -719,18 +703,50 @@ const CyberShieldPage: React.FC = () => {
                     ) : (
                       <div className="w-32 h-32 rounded-full mb-4 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
                     )}
-                    <h3 className="text-xl font-semibold mb-2 text-slate-800">{member.name}</h3>
-                    <p className="text-blue-600 font-medium mb-2 text-lg">{member.role}</p>
-                    <p className="text-md text-slate-600 flex-grow mb-4">{member.bio}</p>
+                    <h3 className="text-xl font-semibold mb-2 text-slate-800">{teamData[4].name}</h3>
+                    <p className="text-blue-600 font-medium mb-2 text-lg">{teamData[4].role}</p>
+                    <p className="text-md text-slate-600 flex-grow mb-4">{teamData[4].bio}</p>
                     <button
-                      className="inline-block border-2 border-blue-600 text-blue-600 hover:bg-blue-50 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
-                      onClick={() => openModal(member)}
+                      className="inline-block bg-blue-600 text-white hover:bg-blue-700 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
+                      onClick={() => openModal(teamData[4])}
                       type="button"
                     >
                       Подробнее
                     </button>
                   </div>
-                ))}
+                  
+                  {/* Два IT-специалиста */}
+                  {teamData.slice(5, 7).map((member) => (
+                    <div
+                      key={member.id}
+                      className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition-shadow duration-300 flex flex-col items-center"
+                    >
+                      {member.imageUrl ? (
+                        <div className="w-32 h-32 rounded-full mb-4 overflow-hidden border-2 border-slate-200 flex items-center justify-center bg-gray-200">
+                          <Image
+                            src={member.imageUrl}
+                            alt={member.name}
+                            className="w-full h-full object-cover"
+                            width={128}
+                            height={128}
+                          />
+                        </div>
+                      ) : (
+                        <div className="w-32 h-32 rounded-full mb-4 bg-gray-200 border-2 border-dashed flex items-center justify-center" />
+                      )}
+                      <h3 className="text-xl font-semibold mb-2 text-slate-800">{member.name}</h3>
+                      <p className="text-blue-600 font-medium mb-2 text-lg">{member.role}</p>
+                      <p className="text-md text-slate-600 flex-grow mb-4">{member.bio}</p>
+                      <button
+                        className="inline-block bg-blue-600 text-white hover:bg-blue-700 font-semibold py-2 px-6 rounded-full text-lg transition-colors duration-300"
+                        onClick={() => openModal(member)}
+                        type="button"
+                      >
+                        Подробнее
+                      </button>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
             {/* Team Modal */}
